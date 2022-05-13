@@ -1,11 +1,11 @@
 package de.bredex.lending.application.api;
 
-public class LendingRequest {
+public final class LendingRequest {
 
-    private String accountNumber;
-    private String isbn;
+    private final String accountNumber;
+    private final String isbn;
     
-    public LendingRequest(String accountNumber, String isbn) {
+    public LendingRequest(final String accountNumber, final String isbn) {
 	this.accountNumber = accountNumber;
 	this.isbn = isbn;
     }

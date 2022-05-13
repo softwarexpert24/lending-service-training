@@ -15,11 +15,11 @@ import de.bredex.lending.domain.model.Lending;
 import de.bredex.lending.domain.service.LendingService;
 
 @RestController
-public class LendingController {
+public final class LendingController {
 
-    private LendingService service;
+    private final LendingService service;
     
-    public LendingController(LendingService service) {
+    public LendingController(final LendingService service) {
 	this.service = service;
     }
     

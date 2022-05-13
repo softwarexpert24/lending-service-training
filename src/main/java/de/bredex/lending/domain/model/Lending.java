@@ -2,27 +2,27 @@ package de.bredex.lending.domain.model;
 
 import java.time.LocalDate;
 
-public class Lending {
+public final class Lending {
 
-    private String accountNumber;
-    private String isbn;
-    private LocalDate returnDate;
+    private final String accountNumber;
+    private final String isbn;
+    private final LocalDate returnDate;
     
-    public Lending(String accountNumber, String isbn, LocalDate returnDate) {
+    public Lending(final String accountNumber, final String isbn, final LocalDate returnDate) {
 	this.accountNumber = accountNumber;
 	this.isbn = isbn;
 	this.returnDate = returnDate;
     }
 
-    public String getAccountNumber() {
+    public final String getAccountNumber() {
 	return accountNumber;
     }
     
-    public String getIsbn() {
+    public final String getIsbn() {
 	return isbn;
     }
     
-    public LocalDate getReturnDate() {
+    public final LocalDate getReturnDate() {
 	return returnDate;
     }
 }

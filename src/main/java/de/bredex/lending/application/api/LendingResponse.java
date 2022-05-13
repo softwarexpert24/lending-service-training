@@ -2,13 +2,13 @@ package de.bredex.lending.application.api;
 
 import java.time.LocalDate;
 
-public class LendingResponse {
+public final class LendingResponse {
 
-    private String accountNumber;
-    private String isbn;
-    private LocalDate returnDate;
+    private final String accountNumber;
+    private final String isbn;
+    private final LocalDate returnDate;
     
-    public LendingResponse(String accountNumber, String isbn, LocalDate returnDate) {
+    public LendingResponse(final String accountNumber, final String isbn, final LocalDate returnDate) {
 	this.accountNumber = accountNumber;
 	this.isbn = isbn;
 	this.returnDate = returnDate;
