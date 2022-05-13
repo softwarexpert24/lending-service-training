@@ -1,0 +1,62 @@
+package de.bredex.lending.domain.spi;
+
+import java.time.LocalDate;
+
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+@Entity
+@Table(name = "lendings")
+public class LendingEntity {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id;
+
+    private String accountNumber;
+    private String isbn;
+    private LocalDate returnDate;
+    
+    public LendingEntity() {}
+    
+    public LendingEntity(String accountNumber, String isbn, LocalDate returnDate) {
+	this.accountNumber = accountNumber;
+	this.isbn = isbn;
+	this.returnDate = returnDate;
+    }
+    
+    public Integer getId() {
+	return id;
+    }
+    
+    public void setId(Integer id) {
+	this.id = id;
+    }
+    
+    public String getAccountNumber() {
+	return accountNumber;
+    }
+    
+    public void setAccountNumber(String accountNumber) {
+	this.accountNumber = accountNumber;
+    }
+    
+    public String getIsbn() {
+	return isbn;
+    }
+    
+    public void setIsbn(String isbn) {
+	this.isbn = isbn;
+    }
+    
+    public LocalDate getReturnDate() {
+	return returnDate;
+    }
+    
+    public void setReturnDate(LocalDate returnDate) {
+	this.returnDate = returnDate;
+    }
+}
