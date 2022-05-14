@@ -60,6 +60,11 @@ public class LendingControllerTest {
 		.andExpect(status().is(HttpStatus.OK.value())).andExpect(jsonPath("$.accountNumber", is("10001")))
 		.andExpect(jsonPath("$.items", hasSize(0)));
     }
+    
+    @Test
+    public void DELETE_returns_400_on_non_existing_lending() throws Exception {
+	deleteLending("10001", "1-86092-038-1").andExpect(status().is(HttpStatus.BAD_REQUEST.value()));
+    }
 
     private ResultActions createLending(final String accountNumber, final String isbn) throws Exception {
 	final LendingRequest request = new LendingRequest(accountNumber, isbn);
