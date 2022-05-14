@@ -1,6 +1,9 @@
 package de.bredex.lending.infrastructure.account;
 
-import org.springframework.beans.factory.annotation.Value;
+import java.net.URI;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -11,18 +14,20 @@ import de.bredex.lending.domain.spi.AccountServiceProvider;
 @Component
 public class AccountServiceProviderImpl implements AccountServiceProvider {
 
-    @Value("${service.account.uri}")
-    private String accountServiceUri;
-    
+    @Autowired
+    private DiscoveryClient discoveryClient;
+
     private final RestTemplate restTemplate;
-    
+
     public AccountServiceProviderImpl(final RestTemplate restTemplate) {
 	this.restTemplate = restTemplate;
     }
-    
+
     @Override
     public boolean accountExists(String accountNumber) {
-	final ResponseEntity<String> response = restTemplate.getForEntity(accountServiceUri + "/" + accountNumber, String.class);
+	final URI accountServiceUri = discoveryClient.getInstances("account-service").get(0).getUri();
+	final ResponseEntity<String> response = restTemplate.getForEntity(accountServiceUri + "/api/v1/account/" + accountNumber,
+		String.class);
 	return response.getStatusCode() == HttpStatus.OK;
     }
 }

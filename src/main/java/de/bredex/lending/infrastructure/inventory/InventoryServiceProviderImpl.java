@@ -1,6 +1,9 @@
 package de.bredex.lending.infrastructure.inventory;
 
-import org.springframework.beans.factory.annotation.Value;
+import java.net.URI;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cloud.client.discovery.DiscoveryClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -11,8 +14,8 @@ import de.bredex.lending.domain.spi.InventoryServiceProvider;
 @Component
 public class InventoryServiceProviderImpl implements InventoryServiceProvider {
 
-    @Value("${service.inventory.uri}")
-    private String inventoryServiceUri;
+    @Autowired
+    private DiscoveryClient discoveryClient;
 
     private final RestTemplate restTemplate;
     
@@ -22,7 +25,8 @@ public class InventoryServiceProviderImpl implements InventoryServiceProvider {
     
     @Override
     public boolean bookExists(String isbn) {
-	final ResponseEntity<String> response = restTemplate.getForEntity(inventoryServiceUri + "/" + isbn, String.class);
+	final URI inventoryServiceUri = discoveryClient.getInstances("inventory-service").get(0).getUri();
+	final ResponseEntity<String> response = restTemplate.getForEntity(inventoryServiceUri + "/api/v1/inventory/" + isbn, String.class);
 	return response.getStatusCode() == HttpStatus.OK;
     }
 }
