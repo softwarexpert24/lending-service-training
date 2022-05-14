@@ -20,24 +20,27 @@ import org.junit.jupiter.api.Test;
 
 import de.bredex.lending.domain.model.Lending;
 import de.bredex.lending.domain.spi.AccountServiceProvider;
+import de.bredex.lending.domain.spi.InventoryServiceProvider;
 import de.bredex.lending.domain.spi.LendingEntity;
 import de.bredex.lending.domain.spi.LendingRepository;
 
 public class LendingServiceTest {
 
     private AccountServiceProvider accountService = mock(AccountServiceProvider.class);
+    private InventoryServiceProvider inventoryService = mock(InventoryServiceProvider.class);
     private LendingRepository repository = mock(LendingRepository.class);
 
     private LendingService service;
 
     @BeforeEach
     public void setUp() {
-	service = new LendingService(accountService, repository);
+	service = new LendingService(accountService, inventoryService, repository);
     }
 
     @Test
     public void borrow_creates_new_lending() {
 	when(accountService.accountExists(any())).thenReturn(true);
+	when(inventoryService.bookExists(any())).thenReturn(true);
 	when(repository.save(any()))
 		.thenReturn(new LendingEntity("10001", "1-86092-038-1", LocalDate.now().plus(4, ChronoUnit.WEEKS)));
 
@@ -51,6 +54,13 @@ public class LendingServiceTest {
     @Test
     public void borrow_throws_exception_for_lending_request_with_non_existing_account() {
 	when(accountService.accountExists(any())).thenReturn(false);
+	assertThrows(IllegalArgumentException.class, () -> service.borrow("10001", "1-86092-038-1"));
+    }
+
+    @Test
+    public void borrow_throws_exception_for_lending_request_with_non_existing_book() {
+	when(accountService.accountExists(any())).thenReturn(true);
+	when(inventoryService.bookExists(any())).thenReturn(false);
 	assertThrows(IllegalArgumentException.class, () -> service.borrow("10001", "1-86092-038-1"));
     }
 

@@ -40,8 +40,8 @@ public class LendingControllerTest {
 
     @BeforeEach
     public void simulateAccountService() {
-	wiremock.stubFor(WireMock.get(WireMock.urlEqualTo("/api/v1/account/10001")).willReturn(WireMock.aResponse()
-		.withBody("{ \"number\": \"10001\", \"firstName\": \"Timo\", \"lastName\": \"Rohrberg\" }")));
+	wiremock.stubFor(WireMock.get(WireMock.urlMatching("/api/v1/account/.*")).willReturn(WireMock.ok()));
+	wiremock.stubFor(WireMock.get(WireMock.urlMatching("/api/v1/inventory/.*")).willReturn(WireMock.ok()));
     }
 
     @Test
