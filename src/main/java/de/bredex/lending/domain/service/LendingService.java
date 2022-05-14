@@ -23,20 +23,20 @@ public final class LendingService {
     }
 
     public final Lending borrow(final String accountNumber, String isbn) {
-	LendingEntity savedLending = repository
+	final LendingEntity savedLending = repository
 		.save(new LendingEntity(accountNumber, isbn, LocalDate.now().plus(4, ChronoUnit.WEEKS)));
 	return new Lending(savedLending.getAccountNumber(), savedLending.getIsbn(), savedLending.getReturnDate());
     }
 
     public final List<Lending> getLendings(final String accountNumber) {
-	List<LendingEntity> lendings = repository.findAllByAccountNumber(accountNumber);
+	final List<LendingEntity> lendings = repository.findAllByAccountNumber(accountNumber);
 	return Collections.unmodifiableList(lendings.stream()
 		.map(lending -> new Lending(lending.getAccountNumber(), lending.getIsbn(), lending.getReturnDate()))
 		.collect(Collectors.toList()));
     }
 
     public final void deleteLending(final String accountNumber, final String isbn) {
-	Optional<LendingEntity> lending = repository.findByAccountNumberAndIsbn(accountNumber, isbn);
+	final Optional<LendingEntity> lending = repository.findByAccountNumberAndIsbn(accountNumber, isbn);
 
 	if (lending.isPresent()) {
 	    repository.delete(lending.get());

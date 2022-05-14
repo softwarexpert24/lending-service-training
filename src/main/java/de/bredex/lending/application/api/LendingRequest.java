@@ -10,11 +10,11 @@ public final class LendingRequest {
 	this.isbn = isbn;
     }
     
-    public String getAccountNumber() {
+    public final String getAccountNumber() {
 	return accountNumber;
     }
     
-    public String getIsbn() {
+    public final String getIsbn() {
 	return isbn;
     }
 }

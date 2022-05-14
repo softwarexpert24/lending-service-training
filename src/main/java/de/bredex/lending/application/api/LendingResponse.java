@@ -14,15 +14,15 @@ public final class LendingResponse {
 	this.returnDate = returnDate;
     }
     
-    public String getAccountNumber() {
+    public final String getAccountNumber() {
 	return accountNumber;
     }
     
-    public String getIsbn() {
+    public final String getIsbn() {
 	return isbn;
     }
     
-    public LocalDate getReturnDate() {
+    public final LocalDate getReturnDate() {
 	return returnDate;
     }
 }

@@ -10,7 +10,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "lendings")
-public class LendingEntity {
+public final class LendingEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +22,7 @@ public class LendingEntity {
     
     public LendingEntity() {}
     
-    public LendingEntity(String accountNumber, String isbn, LocalDate returnDate) {
+    public LendingEntity(final String accountNumber, final String isbn, final LocalDate returnDate) {
 	this.accountNumber = accountNumber;
 	this.isbn = isbn;
 	this.returnDate = returnDate;
