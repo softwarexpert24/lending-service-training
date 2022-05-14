@@ -8,7 +8,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.RegisterExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +20,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.github.tomakehurst.wiremock.client.WireMock;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import com.github.tomakehurst.wiremock.junit5.WireMockExtension;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -28,6 +33,16 @@ public class LendingControllerTest {
 
     @Autowired
     private ObjectMapper mapper;
+
+    @RegisterExtension
+    static WireMockExtension wiremock = WireMockExtension.newInstance()
+	    .options(WireMockConfiguration.wireMockConfig().port(8080)).build();
+
+    @BeforeEach
+    public void simulateAccountService() {
+	wiremock.stubFor(WireMock.get(WireMock.urlEqualTo("/api/v1/account/10001")).willReturn(WireMock.aResponse()
+		.withBody("{ \"number\": \"10001\", \"firstName\": \"Timo\", \"lastName\": \"Rohrberg\" }")));
+    }
 
     @Test
     public void POST_createLending_creates_new_lending() throws Exception {
@@ -60,7 +75,7 @@ public class LendingControllerTest {
 		.andExpect(status().is(HttpStatus.OK.value())).andExpect(jsonPath("$.accountNumber", is("10001")))
 		.andExpect(jsonPath("$.items", hasSize(0)));
     }
-    
+
     @Test
     public void DELETE_returns_400_on_non_existing_lending() throws Exception {
 	deleteLending("10001", "1-86092-038-1").andExpect(status().is(HttpStatus.BAD_REQUEST.value()));

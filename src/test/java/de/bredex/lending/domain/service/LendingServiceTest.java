@@ -1,6 +1,7 @@
 package de.bredex.lending.domain.service;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
@@ -18,22 +19,25 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import de.bredex.lending.domain.model.Lending;
+import de.bredex.lending.domain.spi.AccountServiceProvider;
 import de.bredex.lending.domain.spi.LendingEntity;
 import de.bredex.lending.domain.spi.LendingRepository;
 
 public class LendingServiceTest {
 
+    private AccountServiceProvider accountService = mock(AccountServiceProvider.class);
     private LendingRepository repository = mock(LendingRepository.class);
 
     private LendingService service;
 
     @BeforeEach
     public void setUp() {
-	service = new LendingService(repository);
+	service = new LendingService(accountService, repository);
     }
 
     @Test
     public void borrow_creates_new_lending() {
+	when(accountService.accountExists(any())).thenReturn(true);
 	when(repository.save(any()))
 		.thenReturn(new LendingEntity("10001", "1-86092-038-1", LocalDate.now().plus(4, ChronoUnit.WEEKS)));
 
@@ -42,6 +46,12 @@ public class LendingServiceTest {
 	assertThat(lending.getAccountNumber()).isEqualTo("10001");
 	assertThat(lending.getIsbn()).isEqualTo("1-86092-038-1");
 	assertThat(lending.getReturnDate()).isEqualTo(LocalDate.now().plus(4, ChronoUnit.WEEKS));
+    }
+    
+    @Test
+    public void borrow_throws_exception_for_lending_request_with_non_existing_account() {
+	when(accountService.accountExists(any())).thenReturn(false);
+	assertThrows(IllegalArgumentException.class, () -> service.borrow("10001", "1-86092-038-1"));
     }
 
     @Test

@@ -10,19 +10,25 @@ import java.util.stream.Collectors;
 import org.springframework.stereotype.Service;
 
 import de.bredex.lending.domain.model.Lending;
+import de.bredex.lending.domain.spi.AccountServiceProvider;
 import de.bredex.lending.domain.spi.LendingEntity;
 import de.bredex.lending.domain.spi.LendingRepository;
 
 @Service
 public final class LendingService {
 
+    private final AccountServiceProvider accountService;
     private final LendingRepository repository;
 
-    public LendingService(final LendingRepository repository) {
+    public LendingService(final AccountServiceProvider accountService, final LendingRepository repository) {
+	this.accountService = accountService;
 	this.repository = repository;
     }
 
     public final Lending borrow(final String accountNumber, String isbn) {
+	if (!accountService.accountExists(accountNumber))
+	    throw new IllegalArgumentException("Account with number '" + accountNumber + "' does not exists.");
+	
 	final LendingEntity savedLending = repository
 		.save(new LendingEntity(accountNumber, isbn, LocalDate.now().plus(4, ChronoUnit.WEEKS)));
 	return new Lending(savedLending.getAccountNumber(), savedLending.getIsbn(), savedLending.getReturnDate());
