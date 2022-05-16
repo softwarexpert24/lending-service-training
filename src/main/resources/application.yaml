@@ -11,3 +11,8 @@ eureka:
     hostname: ${spring.application.name}
     instance-id: ${spring.application.name}
     preferIpAddress: true
+management:
+  endpoint:
+    health:
+      probes:
+        enabled: true
