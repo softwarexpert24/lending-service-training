@@ -25,27 +25,27 @@ public class InventoryServiceProviderImpl implements InventoryServiceProvider {
     private final RestTemplate restTemplate;
 
     public InventoryServiceProviderImpl(final RestTemplate restTemplate) {
-	this.restTemplate = restTemplate;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public boolean bookExists(String isbn) {
-	final URI inventoryServiceUri = resolveInventoryServiceBaseUri();
+        final URI inventoryServiceUri = resolveInventoryServiceBaseUri();
 
-	try {
-	    final ResponseEntity<String> response = restTemplate
-		    .getForEntity(inventoryServiceUri + "/api/v1/inventory/" + isbn, String.class);
-	    return response.getStatusCode() == HttpStatus.OK;
-	} catch (final RestClientException exception) {
-	    return false;
-	}
+        try {
+            final ResponseEntity<String> response = restTemplate
+                .getForEntity(inventoryServiceUri + "/api/v1/inventory/" + isbn, String.class);
+            return response.getStatusCode() == HttpStatus.OK;
+        } catch (final RestClientException exception) {
+            return false;
+        }
     }
-    
-    private URI resolveInventoryServiceBaseUri( ) {
-	if (externalServiceBaseUri != null && !externalServiceBaseUri.isEmpty()) {
-	    return URI.create(externalServiceBaseUri);
-	} else {
-	    return discoveryClient.getInstances("inventory-service").get(0).getUri();
-	}
+
+    private URI resolveInventoryServiceBaseUri() {
+        if (externalServiceBaseUri != null && !externalServiceBaseUri.isEmpty()) {
+            return URI.create(externalServiceBaseUri);
+        } else {
+            return discoveryClient.getInstances("inventory-service").get(0).getUri();
+        }
     }
 }

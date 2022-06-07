@@ -34,62 +34,63 @@ public class LendingServiceTest {
 
     @BeforeEach
     public void setUp() {
-	service = new LendingService(accountService, inventoryService, repository);
+        service = new LendingService(accountService, inventoryService, repository);
     }
 
     @Test
     public void borrow_creates_new_lending() {
-	when(accountService.accountExists(any())).thenReturn(true);
-	when(inventoryService.bookExists(any())).thenReturn(true);
-	when(repository.save(any()))
-		.thenReturn(new LendingEntity("10001", "1-86092-038-1", LocalDate.now().plus(4, ChronoUnit.WEEKS)));
+        when(accountService.accountExists(any())).thenReturn(true);
+        when(inventoryService.bookExists(any())).thenReturn(true);
+        when(repository.save(any()))
+            .thenReturn(new LendingEntity("10001", "1-86092-038-1", LocalDate.now().plus(4, ChronoUnit.WEEKS)));
 
-	Lending lending = service.borrow("10001", "1-86092-038-1");
+        Lending lending = service.borrow("10001", "1-86092-038-1");
 
-	assertThat(lending.getAccountNumber()).isEqualTo("10001");
-	assertThat(lending.getIsbn()).isEqualTo("1-86092-038-1");
-	assertThat(lending.getReturnDate()).isEqualTo(LocalDate.now().plus(4, ChronoUnit.WEEKS));
+        assertThat(lending.getAccountNumber()).isEqualTo("10001");
+        assertThat(lending.getIsbn()).isEqualTo("1-86092-038-1");
+        assertThat(lending.getReturnDate()).isEqualTo(LocalDate.now().plus(4, ChronoUnit.WEEKS));
     }
-    
+
     @Test
     public void borrow_throws_exception_for_lending_request_with_non_existing_account() {
-	when(accountService.accountExists(any())).thenReturn(false);
-	assertThrows(IllegalArgumentException.class, () -> service.borrow("10001", "1-86092-038-1"));
+        when(accountService.accountExists(any())).thenReturn(false);
+        assertThrows(IllegalArgumentException.class, () -> service.borrow("10001", "1-86092-038-1"));
     }
 
     @Test
     public void borrow_throws_exception_for_lending_request_with_non_existing_book() {
-	when(accountService.accountExists(any())).thenReturn(true);
-	when(inventoryService.bookExists(any())).thenReturn(false);
-	assertThrows(IllegalArgumentException.class, () -> service.borrow("10001", "1-86092-038-1"));
+        when(accountService.accountExists(any())).thenReturn(true);
+        when(inventoryService.bookExists(any())).thenReturn(false);
+        assertThrows(IllegalArgumentException.class, () -> service.borrow("10001", "1-86092-038-1"));
     }
 
     @Test
     public void getLendings_returns_lendings() {
-	final List<LendingEntity> storedLendings = new LinkedList<>();
-	storedLendings.add(new LendingEntity("10001", "1-86092-038-1", LocalDate.now().plus(4, ChronoUnit.WEEKS)));
-	storedLendings.add(new LendingEntity("10001", "1-86092-025-9", LocalDate.now().plus(4, ChronoUnit.WEEKS)));
-	when(repository.findAllByAccountNumber(any())).thenReturn(storedLendings);
+        final List<LendingEntity> storedLendings = new LinkedList<>();
+        storedLendings.add(new LendingEntity("10001", "1-86092-038-1", LocalDate.now().plus(4, ChronoUnit.WEEKS)));
+        storedLendings.add(new LendingEntity("10001", "1-86092-025-9", LocalDate.now().plus(4, ChronoUnit.WEEKS)));
+        when(repository.findAllByAccountNumber(any())).thenReturn(storedLendings);
 
-	final List<Lending> lendings = service.getLendings("10001");
+        final List<Lending> lendings = service.getLendings("10001");
 
-	assertThat(lendings.size()).isEqualTo(2);
+        assertThat(lendings.size()).isEqualTo(2);
     }
 
     @Test
     public void deleteLending_throws_exception_for_non_existing_lending() {
-	when(repository.findByAccountNumberAndIsbn(any(), any())).thenReturn(Optional.empty());
+        when(repository.findByAccountNumberAndIsbn(any(), any())).thenReturn(Optional.empty());
 
-	Assertions.assertThrows(IllegalArgumentException.class, () -> service.deleteLending("10001", "1-86092-038-1"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> service.deleteLending("10001", "1-86092-038-1"));
     }
-    
+
     @Test
     public void deleteLending_deletes_existing_lending() {
-	final LendingEntity lendingEntity = new LendingEntity("10001", "1-86092-038-1", LocalDate.now().plus(4, ChronoUnit.WEEKS));
-	when(repository.findByAccountNumberAndIsbn(any(), any())).thenReturn(Optional.of(lendingEntity));
+        final LendingEntity lendingEntity = new LendingEntity("10001", "1-86092-038-1",
+            LocalDate.now().plus(4, ChronoUnit.WEEKS));
+        when(repository.findByAccountNumberAndIsbn(any(), any())).thenReturn(Optional.of(lendingEntity));
 
-	service.deleteLending("10001", "1-86092-038-1");
-	
-	verify(repository, times(1)).delete(lendingEntity);
+        service.deleteLending("10001", "1-86092-038-1");
+
+        verify(repository, times(1)).delete(lendingEntity);
     }
 }

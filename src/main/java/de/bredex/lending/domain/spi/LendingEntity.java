@@ -19,44 +19,45 @@ public final class LendingEntity {
     private String accountNumber;
     private String isbn;
     private LocalDate returnDate;
-    
-    public LendingEntity() {}
-    
+
+    public LendingEntity() {
+    }
+
     public LendingEntity(final String accountNumber, final String isbn, final LocalDate returnDate) {
-	this.accountNumber = accountNumber;
-	this.isbn = isbn;
-	this.returnDate = returnDate;
+        this.accountNumber = accountNumber;
+        this.isbn = isbn;
+        this.returnDate = returnDate;
     }
-    
+
     public Integer getId() {
-	return id;
+        return id;
     }
-    
+
     public void setId(Integer id) {
-	this.id = id;
+        this.id = id;
     }
-    
+
     public String getAccountNumber() {
-	return accountNumber;
+        return accountNumber;
     }
-    
+
     public void setAccountNumber(String accountNumber) {
-	this.accountNumber = accountNumber;
+        this.accountNumber = accountNumber;
     }
-    
+
     public String getIsbn() {
-	return isbn;
+        return isbn;
     }
-    
+
     public void setIsbn(String isbn) {
-	this.isbn = isbn;
+        this.isbn = isbn;
     }
-    
+
     public LocalDate getReturnDate() {
-	return returnDate;
+        return returnDate;
     }
-    
+
     public void setReturnDate(LocalDate returnDate) {
-	this.returnDate = returnDate;
+        this.returnDate = returnDate;
     }
 }

@@ -18,34 +18,34 @@ public class AccountServiceProviderImpl implements AccountServiceProvider {
 
     @Value("${service.external.uri:}")
     private String externalServiceBaseUri;
-    
+
     @Autowired
     private DiscoveryClient discoveryClient;
 
     private final RestTemplate restTemplate;
 
     public AccountServiceProviderImpl(final RestTemplate restTemplate) {
-	this.restTemplate = restTemplate;
+        this.restTemplate = restTemplate;
     }
 
     @Override
     public boolean accountExists(String accountNumber) {
-	final URI accountServiceBaseUri = resolveAccountServiceBaseUri();
+        final URI accountServiceBaseUri = resolveAccountServiceBaseUri();
 
-	try {
-	    final ResponseEntity<String> response = restTemplate
-		    .getForEntity(accountServiceBaseUri + "/api/v1/account/" + accountNumber, String.class);
-	    return response.getStatusCode() == HttpStatus.OK;
-	} catch (final RestClientException exception) {
-	    return false;
-	}
+        try {
+            final ResponseEntity<String> response = restTemplate
+                .getForEntity(accountServiceBaseUri + "/api/v1/account/" + accountNumber, String.class);
+            return response.getStatusCode() == HttpStatus.OK;
+        } catch (final RestClientException exception) {
+            return false;
+        }
     }
-    
-    private URI resolveAccountServiceBaseUri( ) {
-	if (externalServiceBaseUri != null && !externalServiceBaseUri.isEmpty()) {
-	    return URI.create(externalServiceBaseUri);
-	} else {
-	    return discoveryClient.getInstances("account-service").get(0).getUri();
-	}
+
+    private URI resolveAccountServiceBaseUri() {
+        if (externalServiceBaseUri != null && !externalServiceBaseUri.isEmpty()) {
+            return URI.create(externalServiceBaseUri);
+        } else {
+            return discoveryClient.getInstances("account-service").get(0).getUri();
+        }
     }
 }

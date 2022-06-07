@@ -4,17 +4,17 @@ public final class LendingRequest {
 
     private final String accountNumber;
     private final String isbn;
-    
+
     public LendingRequest(final String accountNumber, final String isbn) {
-	this.accountNumber = accountNumber;
-	this.isbn = isbn;
+        this.accountNumber = accountNumber;
+        this.isbn = isbn;
     }
-    
+
     public final String getAccountNumber() {
-	return accountNumber;
+        return accountNumber;
     }
-    
+
     public final String getIsbn() {
-	return isbn;
+        return isbn;
     }
 }
