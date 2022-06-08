@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
 
 import de.bredex.lending.domain.spi.AccountServiceProvider;
@@ -45,7 +46,7 @@ public class AccountServiceProviderImpl implements AccountServiceProvider {
                     uri.get() + "/api/v1/account/" + accountNumber, String.class);
 
                 return response.getStatusCode() == HttpStatus.OK;
-            } catch (ResourceAccessException e) {
+            } catch (RestClientException e) {
                 // Do nothing.
             }
         }
